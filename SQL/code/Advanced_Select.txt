@@ -16,3 +16,23 @@ select concat("There are a total of"," ", count(Occupation)," ", lower(occupatio
 3. Occupations
 Solution:
 select Doctor,Professor,Singer,Actor from (select Name,Occupation ,row_number() over(partition by Occupation order by Name) rn from Occupations) as source pivot ( max(name) for Occupation in (Doctor,Professor,Singer,Actor) ) as PVT;
+
+4.New Companies
+Solution:
+select c.company_code, max(c.founder), 
+    count(distinct l.lead_manager_code), count(distinct s.senior_manager_code), 
+    count(distinct m.manager_code),count(distinct e.employee_code) 
+from Company c, Lead_Manager l, Senior_Manager s, Manager m, Employee e 
+where c.company_code = l.company_code 
+    and l.lead_manager_code=s.lead_manager_code 
+    and s.senior_manager_code=m.senior_manager_code 
+    and m.manager_code=e.manager_code 
+group by c.company_code order by c.company_code;
+
+5.Binary Tree Nodes
+Solution:
+select N,
+case 
+when P is NULL then 'Root'
+when N in (select P from BST) then 'Inner'
+else 'Leaf' end as Node from BST order by N;
